@@ -295,15 +295,15 @@ def predict_ts(df,nutrient,model,hyperparameters,values):
     return df
 
 #%%
-# Make sure you are in the main folder('..\PDF_Uppsala')
+# Make sure you are in the main folder('..\Dissolved-Oxygen-MLPrediction')
 cd = os.getcwd()
-while cd.split('\\')[-1]!='PDF_Uppsala':
+while cd.split('\\')[-1]!='Dissolved-Oxygen-MLPrediction':
     os.chdir('..')
     cd=os.getcwd()
 # Load training dataset
 lakename='Mueggelsee'
-os.chdir(cd+'\\Work record\\7-Nutrient prediction\\'+lakename)
-all_df = pd.read_csv('Mueggelsee_Observation_df_nowinter_classification2.csv',sep = '\t',parse_dates=['Date'])
+os.chdir(cd+'\\Trainning data')
+all_df = pd.read_csv('Mueggelsee_Observation_df_nowinter.csv',sep = '\t',parse_dates=['Date'])
 
 #%% Preprocess training features
 print(all_df.columns)
@@ -375,7 +375,7 @@ print('Data spans from {} to {}'.format(Dataset_range[0],Dataset_range[1]))
 
 #%% Run the model
 ## Specify the training year (take 11 years from 2004-2016)
-for i in range(20,30):
+for i in range(30):
     year = all_df['Date'].apply(lambda d:d.year).unique()
     #print('Dataset contains years:{},in total {} years'.format(year,len(year)))
     Dataset_range= [pd.Timestamp(year[0],1,1),
@@ -397,7 +397,7 @@ for i in range(20,30):
         file = lakename+'_Daily_Observation_df_nowinter.csv'
         Daily_df = read_daily_test_df(features,Ice_c,iceoff_name,ice_d_name,zoo_name,file).dropna() 
         Daily_df = Daily_df[Daily_df['Date']>Dataset_range[0]]
-        os.chdir(cd+'\\Work record\\7-Nutrient prediction\\'+lakename+'\\direct LSTM')
+        os.chdir(cd+'\\Nutrient prediction\\'+lakename+'\\direct LSTM')
         features.pop(0) # Pop 'Date'
         Scaler_X = MinMaxScaler()
         Scaler_y = MinMaxScaler()#PowerTransformer(standardize=False)

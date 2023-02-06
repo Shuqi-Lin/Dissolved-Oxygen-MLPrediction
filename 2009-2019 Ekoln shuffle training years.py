@@ -293,14 +293,14 @@ def predict_ts(df,nutrient,model,hyperparameters,values):
     return df
 
 #%%
-# Make sure you are in the main folder('..\PDF_Uppsala')
+# Make sure you are in the main folder('..\Dissolved-Oxygen-MLPrediction')
 cd = os.getcwd()
-while cd.split('\\')[-1]!='PDF_Uppsala':
+while cd.split('\\')[-1]!='Dissolved-Oxygen-MLPrediction':
     os.chdir('..')
     cd=os.getcwd()
 # Load training dataset
 lakename='Ekoln'
-os.chdir(cd+'\\Work record\\7-Nutrient prediction\\'+lakename)
+os.chdir(cd+'\\Trainning data')
 all_df = pd.read_csv('Ekoln_Observation_df_nowinter.csv',sep = '\t',parse_dates=['Date'])
 
 #%% Preprocess training features
@@ -389,7 +389,7 @@ for i in range(30):
     if id(training_yr) not in ids:
         training_yr_df[i]=training_yr
         start_time = time.time()
-        os.chdir(cd+'\\Work record\\7-Nutrient prediction\\'+lakename)
+        os.chdir(cd+'\\Nutrient prediction\\'+lakename)
         # Load daily physical factors
         features = ['Date', 'thermD', 'MLD', 'swr', 'U', 'AirP', 'AirT', 'CC', 'Prec','RelHum', 'Inflow', 'W', 'delT',
                     'day_from_iceoff_0','day_from_iceoff_1', 'day_from_iceoff_2', 'day_from_iceoff_3',
@@ -398,7 +398,7 @@ for i in range(30):
         file = lakename+'_Daily_Observation_df_nowinter.csv'
         Daily_df = read_daily_test_df(features,Ice_c,iceoff_name,ice_d_name,zoo_name,file).dropna() 
         Daily_df = Daily_df[Daily_df['Date']>Dataset_range[0]]
-        os.chdir(cd+'\\Work record\\7-Nutrient prediction\\'+lakename+'\\direct LSTM')
+        os.chdir(cd+'\\Nutrient prediction\\'+lakename+'\\direct LSTM')
         features.pop(0) # Pop 'Date'
         Scaler_X = MinMaxScaler()
         Scaler_y = MinMaxScaler()#PowerTransformer(standardize=False)

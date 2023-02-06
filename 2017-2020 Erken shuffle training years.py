@@ -293,16 +293,16 @@ def predict_ts(df,nutrient,model,hyperparameters,values):
     return df
 
 #%%
-# Make sure you are in the main folder('..\PDF_Uppsala')
+# Make sure you are in the main folder('..\Dissolved-Oxygen-MLPredictiona')
 cd = os.getcwd()
-while cd.split('\\')[-1]!='PDF_Uppsala':
+while cd.split('\\')[-1]!='Dissolved-Oxygen-MLPrediction':
     os.chdir('..')
     cd=os.getcwd()
 os.chdir(cd+'\\Training dataset')
 # Load training dataset
 os.chdir(cd+'\\Training dataset')
 lakename='Erken'
-all_df = pd.read_csv('Erken_Observation_df_nowinter_classification2.csv',sep = '\t',parse_dates=['Date'])
+all_df = pd.read_csv('Erken_Observation_df_nowinter.csv',sep = '\t',parse_dates=['Date'])
 
 #%% Preprocess training features
 print(all_df.columns)
@@ -354,9 +354,9 @@ if zoo_c=='Y':
 
 all_df=test_df.copy()
 print(all_df.columns)
-n_feature = 23
+n_feature = 24
 features = ['Date','delT', 'U', 'AirT', 'Humidity', 'CC', 'Prec', 'SWR', 'inflow', 'outflow', 
-            'thermD', 'MLD', 'W', 'accum_BotT',
+            'thermD', 'MLD', 'W', 'accum_BotT','St',
             'days from iceoff_-3', 'days from iceoff_-2', 'days from iceoff_-1',
             'days from iceoff_0', 'days from iceoff_1', 'days from iceoff_2',
             'days from iceoff_3', 'Ice_d_long', 'Ice_d_middle', 'Ice_d_short']
@@ -382,7 +382,7 @@ print('Data spans from {} to {}'.format(Dataset_range[0],Dataset_range[1]))
 
 #%%
 ## Specify the training year (take 16 years from 1999-2016)
-for i in range(20,30):
+for i in range(30):
     year = all_df['Date'].apply(lambda d:d.year).unique()
     #print('Dataset contains years:{},in total {} years'.format(year,len(year)))
     Dataset_range= [pd.Timestamp(year[0],1,1),
@@ -395,7 +395,7 @@ for i in range(20,30):
     if id(training_yr) not in ids:
         training_yr_df[i]=training_yr
         start_time = time.time()
-        os.chdir(cd+'\\Training dataset')
+        os.chdir(cd+'\\Trainning data')
         # Load daily physical factors
         features = ['Date','delT', 'U', 'AirT', 'Humidity', 'CC', 'Prec', 'SWR', 'inflow', 'outflow', 
                     'thermD', 'MLD', 'W', 'accum_BotT',
@@ -406,7 +406,7 @@ for i in range(20,30):
         file = lakename+'_Daily_Observation_df_nowinter.csv'
         Daily_df = read_daily_test_df(features,Ice_c,iceoff_name,ice_d_name,zoo_name,file).dropna() 
         Daily_df = Daily_df[Daily_df['Date']>Dataset_range[0]]
-        os.chdir(cd+'\\Work record\\7-Nutrient prediction\\Erken\\direct LSTM')
+        os.chdir(cd+'\\Nutrient prediction\\Erken\\direct LSTM')
         features.pop(0) # Pop 'Date'
         Scaler_X = MinMaxScaler()
         Scaler_y = MinMaxScaler()#PowerTransformer(standardize=False)
